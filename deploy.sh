@@ -21,4 +21,7 @@ echo "Contenedores activos:"
 sudo docker ps
 EOF
 
+echo "Levantando servidor local..."
+nohup node server.js > app.log 2>&1 &
+
 echo "Deploy terminado en http://160.34.208.187:8088"
