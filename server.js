@@ -1,9 +1,14 @@
 const express = require("express");
 const Database = require("better-sqlite3");
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
-const db = new Database("/app/datos/agenda.db");
+
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "datos");
+fs.mkdirSync(DATA_DIR, { recursive: true });
+
+const db = new Database(path.join(DATA_DIR, "agenda.db"));
 
 // Crear tabla si no existe
 db.exec(`
@@ -17,7 +22,6 @@ db.exec(`
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
-
 // GET - listar todos los contactos
 app.get("/api/contactos", (req, res) => {
   const contactos = db.prepare("SELECT * FROM contactos ORDER BY nombre").all();
